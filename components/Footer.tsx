@@ -1,3 +1,5 @@
+"use client";
+
 import { Facebook, Instagram, MessageCircle, Youtube } from "lucide-react";
 import Link from "next/link";
 

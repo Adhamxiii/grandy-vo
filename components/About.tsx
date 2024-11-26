@@ -28,7 +28,11 @@ const achievements = [
   },
 ];
 
-export function About() {
+export function About({
+  about,
+}: {
+  about: { imageUrl2: string; content: string };
+}) {
   return (
     <section
       id="about"
@@ -49,7 +53,7 @@ export function About() {
             className="relative flex justify-center"
           >
             <div className="relative">
-              <AudioVisualizer />
+              <AudioVisualizer image={about.imageUrl2} />
               <motion.div
                 className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-500 to-cyan-500 p-1 rounded-xl"
                 initial={{ opacity: 0, y: 20 }}
@@ -98,12 +102,7 @@ export function About() {
                 viewport={{ once: true }}
                 className="text-lg text-gray-300"
               >
-                Hi, I&apos;m Omar Grandy, a passionate and driven voice-over
-                artist ready to make an impact in the industry. Specializing in
-                commercials, corporate narration, and character voices, I bring
-                energy and authenticity to every project. While I&apos;m at the
-                start of my journey, my commitment to quality and storytelling
-                shines through in my work.
+                {about.content}
               </motion.p>
             </div>
 

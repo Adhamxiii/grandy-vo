@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 import { Mic } from "lucide-react";
 
-const Hero = () => {
+const Hero = ({ image }: { image: string }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -145,7 +145,7 @@ const Hero = () => {
               variants={imageVariants}
             >
               <Image
-                src={`/logo.png`}
+                src={image}
                 alt="logo"
                 fill
                 className="object-cover rounded-full"

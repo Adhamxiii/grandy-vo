@@ -5,35 +5,23 @@ import { Play } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-const portfolioItems = [
-  {
-    title: "تجربة أداء اعلان ايسكريم السعودية",
-    videoId: "3gkE8wB9DZ0",
-  },
-  {
-    title: "دوبلاج كرتون بسيط لتعليم نظام الكيتو دايت",
-    videoId: "5hq9A5SJaCU",
-  },
-  {
-    title: "تعليق صوتي - Voice over | اعلان تجاري للبنك الأهلي المصري🎙️",
-    videoId: "TpaJK5UbnPw",
-  },
-];
 
-const Portfolio = () => {
+const Portfolio = ({
+  projects,
+}: {
+  projects: { id: string; title: string; videoUrl: string }[];
+}) => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeVideo) {
-      // Disable body scroll when modal is open
       document.body.style.overflow = "hidden";
     } else {
-      // Enable body scroll when modal is closed
       document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = "auto"; // Reset scroll on cleanup
+      document.body.style.overflow = "auto";
     };
   }, [activeVideo]);
 
@@ -46,7 +34,6 @@ const Portfolio = () => {
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    // Close modal when the overlay (background) is clicked
     if (e.target === e.currentTarget) {
       setActiveVideo(null);
     }
@@ -77,12 +64,12 @@ const Portfolio = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 justify-stretch gap-8 max-w-6xl mx-auto">
-          {portfolioItems.map((item, index) => (
+          {projects.slice(0, 3).map((item, i) => (
             <motion.div
-              key={item.title}
+              key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
               viewport={{ once: true }}
               className="group relative"
             >
@@ -90,14 +77,14 @@ const Portfolio = () => {
               <div className="relative bg-black/40 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-colors justify-self-stretch h-[300px]">
                 <div className="aspect-video relative">
                   <Image
-                    src={`https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg`}
+                    src={`https://img.youtube.com/vi/${item.videoUrl}/hqdefault.jpg`}
                     alt={item.title}
                     fill
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
-                      onClick={() => handlePlay(item.videoId)}
+                      onClick={() => handlePlay(item.videoUrl)}
                       className="p-4 bg-purple-500 rounded-full text-white transform hover:scale-110 transition-transform duration-300"
                     >
                       <Play className="w-6 h-6" />
@@ -114,7 +101,6 @@ const Portfolio = () => {
           ))}
         </div>
 
-        {/* Video Modal Dialog */}
         {activeVideo && (
           <div
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
