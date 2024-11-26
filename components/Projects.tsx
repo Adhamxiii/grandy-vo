@@ -5,7 +5,7 @@ import { Clock, Play, Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-const Projects = ({ about, projects }: any) => {
+const Projects = ({ about, projects }: { about: any; projects: any }) => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
