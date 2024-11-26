@@ -5,11 +5,35 @@ import { Clock, Play, Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-const Projects = ({ about, projects }: { about: any; projects: any }) => {
+interface Project {
+  createdAt: string;
+  description: string;
+  duration: string;
+  id: string;
+  title: string;
+  videoUrl: string;
+}
+
+const Projects = ({
+  about,
+  projects,
+}: {
+  about: {
+    clients: number;
+    content: string;
+    createdAt: string;
+    id: string;
+    imageUrl: string;
+    imageUrl2: string;
+    language: number;
+    voiceStyles: number;
+  };
+  projects: Project[];
+}) => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  console.log(about);
+  console.log(projects);
 
   const handlePlay = (videoId: string) => {
     setActiveVideo(videoId);
@@ -26,7 +50,7 @@ const Projects = ({ about, projects }: { about: any; projects: any }) => {
   };
 
   const filteredProjects = projects.filter(
-    (project: any) =>
+    (project: Project) =>
       project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -70,7 +94,7 @@ const Projects = ({ about, projects }: { about: any; projects: any }) => {
 
       <div className="container mx-auto px-4 pb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects?.map((item: any, i: number) => (
+          {filteredProjects?.map((item: Project, i: number) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
@@ -126,6 +150,7 @@ const Projects = ({ about, projects }: { about: any; projects: any }) => {
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 className="w-full h-full rounded-lg"
+                title="YouTube video player"
               ></iframe>
               <button
                 onClick={handleClose}
