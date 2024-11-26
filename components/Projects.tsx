@@ -33,8 +33,6 @@ const Projects = ({
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  console.log(projects);
-
   const handlePlay = (videoId: string) => {
     setActiveVideo(videoId);
   };
