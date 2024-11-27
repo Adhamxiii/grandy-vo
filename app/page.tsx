@@ -11,8 +11,6 @@ export default async function Home() {
   const about = await Axios.get("/about");
   const projects = await Axios.get("/projects");
 
-  console.log(about.data);
-
   return (
     <main className="min-h-screen max-w-screen overflow-hidden bg-black">
       <Hero image={about.data.imageUrl} />

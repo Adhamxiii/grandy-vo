@@ -106,7 +106,7 @@ const Portfolio = ({
         {activeVideo && (
           <div
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-            onClick={handleOverlayClick} // Close when clicking outside the modal
+            onClick={handleOverlayClick}
           >
             <div className="relative w-full max-w-7xl h-[80%] aspect-video">
               <iframe
@@ -115,6 +115,7 @@ const Portfolio = ({
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 className="w-full h-full rounded-lg"
+                title="video player"
               ></iframe>
               <button
                 onClick={handleClose}
