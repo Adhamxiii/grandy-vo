@@ -64,7 +64,7 @@ const Portfolio = ({
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 justify-stretch gap-8 max-w-6xl mx-auto">
-          {projects.slice(0, 3).map((item, i) => (
+          {projects.slice(-3).map((item, i) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
