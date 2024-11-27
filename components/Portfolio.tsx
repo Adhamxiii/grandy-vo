@@ -86,6 +86,8 @@ const Portfolio = ({
                     <button
                       onClick={() => handlePlay(item.videoUrl)}
                       className="p-4 bg-purple-500 rounded-full text-white transform hover:scale-110 transition-transform duration-300"
+                      type="button"
+                      aria-label="Play Video"
                     >
                       <Play className="w-6 h-6" />
                     </button>

@@ -211,6 +211,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-purple-600 transition-colors"
+                  aria-label="Facebook"
                 >
                   <Facebook className="size-5" />
                 </Link>
@@ -219,6 +220,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-purple-600 transition-colors"
+                  aria-label="YouTube"
                 >
                   <Youtube className="size-5" />
                 </Link>
@@ -227,6 +229,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-purple-600 transition-colors"
+                  aria-label="WhatsApp"
                 >
                   <MessageCircle className="size-5" />
                 </Link>
@@ -235,6 +238,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-purple-600 transition-colors"
+                  aria-label="Instagram"
                 >
                   <Instagram className="size-5" />
                 </Link>
@@ -288,7 +292,7 @@ const Contact = () => {
                     htmlFor="projectDetails"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Project Details
+                    Message
                   </label>
                   <textarea
                     id="message"
