@@ -9,7 +9,7 @@ import Portfolio from "@/components/Portfolio";
 import { SocialNavbar } from "@/components/SocialNavbar";
 import { Axios } from "@/lib/axios";
 
-interface AboutData {
+export interface AboutData {
   clients: number;
   content: string;
   createdAt: string;
@@ -20,7 +20,7 @@ interface AboutData {
   voiceStyles: number;
 }
 
-interface ProjectData {
+export interface ProjectData {
   createdAt: string;
   description: string;
   duration: string;
