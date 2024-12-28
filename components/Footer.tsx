@@ -59,7 +59,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4">Contact Info</h3>
             <div className="space-y-4">
               <a
-                href="mailto:omora8708@gmail.com"
+                href="mailto:grandyvo76@gmail.com"
                 className="flex items-center text-gray-400 hover:text-purple-600 transition-colors"
               >
                 <svg
@@ -75,7 +75,7 @@ const Footer = () => {
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                omora8708@gmail.com
+                grandyvo76@gmail.com
               </a>
               <a
                 href="tel:+1234567890"
