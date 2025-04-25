@@ -61,10 +61,10 @@ const Projects = ({
         className="container mx-auto px-4 py-20 z-[2]"
       >
         <h1 className="text-5xl md:text-7xl font-bold mb-6">My Portfolio</h1>
-        <p className="text-xl text-purple-200 max-w-2xl">
+        <h2 className="text-xl text-purple-200 max-w-2xl">
           Explore my diverse range of voice-over projects spanning commercials,
           animation, corporate narration, and more.
-        </p>
+        </h2>
       </motion.div>
 
       <div className="container mx-auto px-4 mb-12">
@@ -105,6 +105,7 @@ const Projects = ({
               <div className="relative bg-black/40 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-colors justify-self-stretch max-h-[700px]">
                 <div className="aspect-video relative">
                   <Image
+                    priority
                     src={`https://img.youtube.com/vi/${item.videoUrl}/hqdefault.jpg`}
                     alt={item.title}
                     fill
@@ -114,6 +115,7 @@ const Projects = ({
                     <button
                       onClick={() => handlePlay(item.videoUrl)}
                       className="p-4 bg-purple-500 rounded-full text-white transform hover:scale-110 transition-transform duration-300"
+                      aria-label="Play"
                     >
                       <Play className="w-6 h-6" />
                     </button>
@@ -143,6 +145,7 @@ const Projects = ({
           >
             <div className="relative w-full max-w-7xl h-[80%] aspect-video">
               <iframe
+                loading="lazy"
                 src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`}
                 frameBorder="0"
                 allow="autoplay; encrypted-media"

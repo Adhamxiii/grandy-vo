@@ -1,10 +1,10 @@
 "use client";
 
-import { Axios } from "@/lib/axios";
+import { postContact } from "@/lib/actions";
 import { motion } from "framer-motion";
-import { Facebook, Instagram, MessageCircle, Youtube } from "lucide-react";
+import { Facebook, Instagram, MessageCircle, Youtube, FileText } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 interface FormData {
   name: string;
@@ -12,61 +12,121 @@ interface FormData {
   message: string;
 }
 
-const Contact = () => {
+const INITIAL_FORM_STATE: FormData = {
+  name: "",
+  email: "",
+  message: "",
+};
+
+interface AlertProps {
+  onClose: () => void;
+}
+
+const SuccessAlert = ({ onClose }: AlertProps) => (
+  <motion.div
+    role="alert"
+    className="rounded-xl border border-gray-100 bg-white p-4 mb-4 absolute right-4 top-4 z-10 shadow-md"
+    initial={{ opacity: 0, x: 20 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: 20 }}
+    transition={{ duration: 0.6 }}
+  >
+    <div className="flex items-start gap-4">
+      <span className="text-green-600">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </span>
+
+      <div className="flex-1">
+        <strong className="block font-medium text-gray-900">
+          Thank you for contacting us!
+        </strong>
+        <p className="mt-1 text-sm text-gray-700">
+          We have received your message and will get back to you shortly.
+        </p>
+      </div>
+
+      <button
+        className="text-gray-500 transition hover:text-gray-600"
+        onClick={onClose}
+        aria-label="Dismiss notification"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  </motion.div>
+);
+
+const ContactForm = memo(() => {
   const [alertVisible, setAlertVisible] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
 
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const postContact = async () => {
-    try {
-      const formParams = new URLSearchParams();
-      formParams.append("name", formData.name);
-      formParams.append("email", formData.email);
-      formParams.append("message", formData.message);
-
-      const response = await Axios.post("/contact", formParams, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-
-      console.log("Response:", response.data);
-      setAlertVisible(true);
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error posting contact:", error);
-    }
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    []
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    await postContact();
+    setIsSubmitting(true);
+
+    try {
+      const result = await postContact(formData);
+
+      if (result.success) {
+        setAlertVisible(true);
+        setFormData(INITIAL_FORM_STATE);
+      } else {
+        console.error("Failed to submit form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const closeAlert = useCallback(() => {
+    setAlertVisible(false);
+  }, []);
 
   useEffect(() => {
     if (alertVisible) {
       const timer = setTimeout(() => {
         setAlertVisible(false);
-      }, 3000); // 3 seconds
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
@@ -74,67 +134,9 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-20 bg-gray-50 relative">
-      <div className="container mx-auto px-4 ">
-        {alertVisible && (
-          <motion.div
-          role="alert"
-          className="rounded-xl border border-gray-100 bg-white p-4 mb-4 absolute right-0"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
-          transition={{ duration: 0.6 }}
-        >
-            <div className="flex items-start gap-4">
-              <span className="text-green-600">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </span>
+      <div className="container mx-auto px-4">
+        {alertVisible && <SuccessAlert onClose={closeAlert} />}
 
-              <div className="flex-1">
-                <strong className="block font-medium text-gray-900">
-                  Thank you for contacting us!
-                </strong>
-                <p className="mt-1 text-sm text-gray-700">
-                  We have received your message and will get back to you
-                  shortly.
-                </p>
-              </div>
-
-              <button
-                className="text-gray-500 transition hover:text-gray-600"
-                onClick={() => setAlertVisible(false)}
-              >
-                <span className="sr-only">Dismiss popup</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </motion.div>
-        )}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -154,6 +156,7 @@ const Contact = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
               className="space-y-8"
             >
               <div className="text-lg font-semibold text-gray-900 mb-6">
@@ -163,6 +166,7 @@ const Contact = () => {
                 <a
                   href="mailto:grandyvo76@gmail.com"
                   className="flex items-center text-gray-600 hover:text-purple-600 transition-colors"
+                  aria-label="Email me"
                 >
                   <svg
                     className="w-6 h-6 mr-3"
@@ -180,8 +184,9 @@ const Contact = () => {
                   grandyvo76@gmail.com
                 </a>
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+201023510579"
                   className="flex items-center text-gray-600 hover:text-purple-600 transition-colors"
+                  aria-label="Call me"
                 >
                   <svg
                     className="w-6 h-6 mr-3"
@@ -198,12 +203,23 @@ const Contact = () => {
                   </svg>
                   (+20) 1023510579
                 </a>
+                <Link
+                  href="https://drive.google.com/drive/folders/1TG6Q-popWh0a8sb8roTEBc-zmlwnD3mj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-gray-600 hover:text-purple-600 transition-colors"
+                  aria-label="View my portfolio on Google Drive"
+                >
+                  <FileText className="size-6 mr-3" />
+                  View My Portfolio on Drive
+                </Link>
               </div>
 
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
                 className="flex space-x-4"
               >
                 <Link
@@ -245,11 +261,11 @@ const Contact = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Column: Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
               className="space-y-6"
             >
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -268,6 +284,7 @@ const Contact = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div>
@@ -285,11 +302,12 @@ const Contact = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor="projectDetails"
+                    htmlFor="message"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
                     Message
@@ -302,13 +320,15 @@ const Contact = () => {
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors"
+                  className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-purple-400"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </motion.div>
@@ -317,6 +337,8 @@ const Contact = () => {
       </div>
     </section>
   );
-};
+});
 
-export default Contact;
+ContactForm.displayName = "ContactForm";
+
+export default ContactForm;
